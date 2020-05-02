@@ -1,0 +1,20 @@
+{
+  "name": "clickify-server",
+  "version": "1.0.0",
+  "description": "The back-end of Open Source Clickify.",
+  "main": "server.js",
+  "license": "ISC",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.10",
+    "shortid": "^2.2.15"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
