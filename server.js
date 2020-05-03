@@ -8,7 +8,7 @@ let app = express();
 require('dotenv').config()  //Environment Configs
 
 // CONFIGURE SENTRY
-sentry.init({ dsn: 'https://ff6da09a7063490b9110bbabb62f9c10@o386985.ingest.sentry.io/5221811' });
+Sentry.init({ dsn: 'https://1c683ce30a9a49699f2061a314493f1d@o386985.ingest.sentry.io/5221824' });
 
 // mongoDBConnection
 mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true,useUnifiedTopology:true},(err)=>{
