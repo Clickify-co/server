@@ -8,7 +8,7 @@ let app = express();
 require('dotenv').config()  //Environment Configs
 
 // CONFIGURE SENTRY
-Sentry.init({ dsn: 'https://ff6da09a7063490b9110bbabb62f9c10@o386985.ingest.sentry.io/5221811' });
+sentry.init({ dsn: 'https://ff6da09a7063490b9110bbabb62f9c10@o386985.ingest.sentry.io/5221811' });
 //SPECIAL ERROR CHECK
 undefinedfunction();
 
