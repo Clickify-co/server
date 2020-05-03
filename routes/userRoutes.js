@@ -5,7 +5,6 @@ const chalk = require('chalk')
 const router = express.Router();
 const shorturlCollection = require('../models/shorturls')
 
-caundefined();
 
 router.post('/addURL', async (req,res)=>{
     let urlData = req.body;
