@@ -1,9 +1,16 @@
+// SENTRY
+const sentry = require('@sentry/node')
 const express = require('express')
 const chalk = require('chalk')
 const mongoose = require('mongoose')
 let app = express();
 
 require('dotenv').config()  //Environment Configs
+
+// CONFIGURE SENTRY
+Sentry.init({ dsn: 'https://ff6da09a7063490b9110bbabb62f9c10@o386985.ingest.sentry.io/5221811' });
+//SPECIAL ERROR CHECK
+undefinedfunction();
 
 // mongoDBConnection
 mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true,useUnifiedTopology:true},(err)=>{
