@@ -21,9 +21,7 @@ mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true,useUnifiedTopolog
 
 // SERVER SETTINGS
     app.use(express.urlencoded({extended:false}))
-    app.use((req,res,send)=>{
-        res.status(404).send('uh oh, This Link was not created.')
-    })
+
 // SERVER SETTINGS
 
 // MAKE SERVER TO LISTEN
@@ -40,5 +38,8 @@ app.listen(process.env.PORT || 3000,()=>{
     app.use('/',shortRoutes)
 app.post('/',(req,res)=>{
     res.send(req.body)
+})
+app.use(function(req,res,send){
+    res.status(404).send('uh oh, This Link was not created.')
 })
 // ROUTES
