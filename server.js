@@ -8,7 +8,7 @@ let app = express();
 require('dotenv').config()  //Environment Configs
 
 // CONFIGURE SENTRY
-Sentry.init({ dsn: 'https://1c683ce30a9a49699f2061a314493f1d@o386985.ingest.sentry.io/5221824' });
+sentry.init({ dsn: 'https://1c683ce30a9a49699f2061a314493f1d@o386985.ingest.sentry.io/5221824' });
 
 // mongoDBConnection
 mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true,useUnifiedTopology:true},(err)=>{
@@ -21,6 +21,9 @@ mongoose.connect(process.env.MONGODB_URI,{useNewUrlParser:true,useUnifiedTopolog
 
 // SERVER SETTINGS
     app.use(express.urlencoded({extended:false}))
+    app.use((req,res,send)=>{
+        res.status(404).send('uh oh, This Link was not created.')
+    })
 // SERVER SETTINGS
 
 // MAKE SERVER TO LISTEN
