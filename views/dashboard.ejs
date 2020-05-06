@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Brand</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <style>
+        .shortURL{
+            color: black;
+            cursor: pointer;
+        }
+        .shortURL:hover{
+            text-decoration: underline;
+            color: #007FBB;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#" style="width: 100%;background-color: #ffffff;"><img src="../images/logos/clickify.png" style="width: 94px;"><div class="sidebar-brand-icon rotate-n-15"></div><div class="sidebar-brand-text mx-3"></div></a>
+                <hr
+                    class="sidebar-divider my-0">
+                    <ul class="nav navbar-nav text-light" id="accordionSidebar">
+                        <li class="nav-item" role="presentation"></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link active" href="dashboard.html"><i class="fas fa-link"></i>&nbsp;<strong>Dashboard</strong></a><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span><div class="text-center d-none d-md-inline"></div></a></li>
+                    </ul>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content" style="margin-right: 5px;">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid">
+                        
+                        <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="/user/addURL" method="POST">
+                            <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Shrink Link" name="fullURL" id="fullURL">
+                                <div class="input-group-append"><button class="btn btn-primary py-0" type="submit"><i class="icon ion-arrow-shrink" style="width: 16px;height: 26px;"></i></button></div>
+                            </div>
+                        </form>
+                        <ul class="nav navbar-nav flex-nowrap ml-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><i class="icon ion-arrow-shrink"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right p-3 animated--grow-in" role="menu" aria-labelledby="searchDropdown">
+                                    <form class="form-inline mr-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Shrink new Link">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="icon ion-arrow-shrink" style="width: 16px;height: 26px;"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow mx-1" role="presentation">
+                               <a href="/user/logout" class="btn btn-primary">Logout <i class="fa fa-sign-out-alt"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Dashboard</h3>
+                    <% if(messages.success){ %>
+                        <div class="alert alert-success">  
+                            <%= messages.success%>   
+                        </div>
+                    <% } %> 
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 font-weight-bold">Your Links</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table dataTable my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 415px;">Full URL</th>
+                                            <th style="width: 267px;">Short URL</th>
+                                            <th style="width: 443px;">Custom Back Part</th>
+                                            <th>Visits</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if(userURLs) { %> 
+                                            <% userURLs.map((userURL)=>{ %>
+                                                <tr>
+                                                    <td>
+                                                        <a href="<%= userURL.fullURL %>"><%= userURL.fullURL.slice(0,60) %></a>
+                                                    </td>
+                                                    <td>
+                                                        <div class="shortURL" onclick="copy('http://localhost:5000/'+'<%= userURL.shortURL %>')">/<%= userURL.shortURL %></div>
+                                                    </td>
+                                                    <td>
+                                                        <form action="/user/setCustomURL" method="POST">
+                                                            <input type="text" name="urlID" id="urlID" hidden value='<%= userURL._id %>'>
+                                                            <input type="text" style="width: 252px;margin-right: 14px;" name="customShortURL" id="customShortURL"  required value="<%=userURL.customShortURL%>" placeholder="No Custom Assigned">
+                                                            <button class="btn btn-primary" type="submit">Update</button></td>
+                                                        </form>
+                                                        <td>
+                                                        <%= userURL.visits %> 
+                                                    </td>
+                                                </tr>
+                                           <% }) %> 
+                                            
+                                        <% } %> 
+                                    </tbody>
+                                    <tfoot>
+                                        <tr></tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script>
+        function copy(textToCopy) {
+            navigator.clipboard.writeText(textToCopy);
+            alert("URL Copied")
+        }
+    </script>
+</body>
+
+</html>

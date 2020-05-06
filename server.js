@@ -21,7 +21,7 @@ const userCollection = require('./models/users');
 // mongoDBConnection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
 	if (err) console.log(chalk.red('MongoDb Connection Error'));
-	else console.log(chalk.green('Connected to MongoDB'));
+	else console.log(chalk.blue('Connected to MongoDB'));
 });
 // mongoDBConnection
 
@@ -45,6 +45,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static('public'))
+app.set('view engine','ejs')
 // SERVER SETTINGS
 
 // MAKE SERVER TO LISTEN
@@ -59,10 +61,18 @@ let userRoutes = require('./routes/userRoutes');
 app.use('/user/', userRoutes);
 let shortRoutes = require('./routes/shortRoutes');
 app.use('/', shortRoutes);
-app.get('/',authCheckers.checkAuthenticated,(req, res) => {
-	res.send('Home Page');
+
+// Static Routes
+app.get('/',(req, res) => {
+	res.render('index.ejs')
 });
+app.get('/user/login',authCheckers.checkUnAuthenticated,(req,res)=>{
+	res.render('login.ejs')
+})
+app.use('/user/register',authCheckers.checkUnAuthenticated,(req,res)=>{
+	res.render('signup.ejs')
+})
 app.use(function(req, res, send) {
-	res.status(404).send('uh oh, This Link was not created.');
+	res.status(404).render('404.ejs');
 }	);
 // ROUTES

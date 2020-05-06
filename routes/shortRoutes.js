@@ -11,7 +11,7 @@ router.get('/:shortURL',async (req,res)=>{
     if(shortURL===null){
         const customURL = await shortURLCollection.findOne({customShortURL:req.params.shortURL})
         if(customURL===null){
-            res.send('<h1>Uh Oh This link does not exist</h1>')
+            res.render('404.ejs')
         }
         else{
             redirectShort(customURL,res)

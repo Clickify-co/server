@@ -12,8 +12,7 @@ const shorturlSchema = new Schema({
     },
     customShortURL:{
         type:String,
-        required:true,
-        default:undefined
+        required:false
     },
     visits:{
         type:Number,
