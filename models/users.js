@@ -13,6 +13,16 @@ const userSchema = new Schema({
     password:{
         type:String,
         required: true,
+    },
+    fullName:{
+        firstName:{
+            type:String,
+            required:false
+        },
+        lastName:{
+            type:String,
+            required:false
+        }
     }
 })
 
