@@ -99,7 +99,7 @@ router.get('/dashboard/:linkid',authCheckers.checkAuthenticated,async(req,res)=>
 		let last_date = new Date()
 		let label = []
 		let data = []
-		for(let i=0;i<7;i++){
+		for(let i=0;i<14;i++){
 			let flag = false;
 			label.push(dateformat(addDays(i,last_date),date_format))
 			let nov = 0;
