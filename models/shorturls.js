@@ -19,7 +19,8 @@ const shorturlSchema = new Schema({
 		required: true,
 		default: 0
 	},
-	dated: [
+	dated: 
+	[
 		{
 			dateOfVisit: {
 				type: Date,

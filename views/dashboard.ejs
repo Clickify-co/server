@@ -89,7 +89,7 @@
                                                         <a href="<%= userURL.fullURL %>"><%= userURL.fullURL.slice(0,60) %></a>
                                                     </td>
                                                     <td>
-                                                        <div class="shortURL" onclick="copy('http://localhost:5000/'+'<%= userURL.shortURL %>')">/<%= userURL.shortURL %></div>
+                                                        <a href="dashboard/<%= userURL._id%>">/<%= userURL.shortURL %></a>
                                                     </td>
                                                     <td>
                                                         <form action="/user/setCustomURL" method="POST">

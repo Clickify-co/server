@@ -3,9 +3,13 @@ const shortid = require('shortid');
 const chalk = require('chalk');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
+const dateformat = require('dateformat')
 const authCheckers = require('../authCheckers')
 
 const router = express.Router();
+
+const date_format = 'dd-mm-yyyy'
+
 const shorturlCollection = require('../models/shorturls');
 const userCollection = require('../models/users');
 
@@ -85,8 +89,53 @@ router.get('/dashboard',authCheckers.checkAuthenticated, async (req, res) => {
 	let userURLs ;
 	if(req.user)
 		userURLs = await shorturlCollection.find({ownerID:req.user._id})
-	res.render('dashboard.ejs',{userURLs:userURLs})
+	res.render('dashboard.ejs',{userURLs})
 });
+
+router.get('/dashboard/:linkid',authCheckers.checkAuthenticated,async(req,res)=>{
+	let userURLs;
+	if(req.user){
+		userURLs = await (shorturlCollection.findOne({ownerID:req.user._id,_id:req.params.linkid}))
+		let last_date = new Date()
+		let label = []
+		let data = []
+		for(let i=0;i<7;i++){
+			let flag = false;
+			label.push(dateformat(addDays(i,last_date),date_format))
+			let nov = 0;
+			for (const {dateOfVisit,numberOfVisits} of userURLs.dated){
+				if(compareDates(dateOfVisit,addDays(i,last_date))){
+					nov = numberOfVisits
+					break;
+				}
+				else{
+					continue
+				}
+			}
+			data.push(nov)
+		}
+		label = label.reverse();
+		data = data.reverse();
+		res.render('linkinfo.ejs',{userURLs,label,data})
+		
+	}
+})
+
+const addDays = (days,date) => {
+	const result = new Date(date);
+  
+	result.setDate(result.getDate() - days);
+  
+	return result;
+  };
+function compareDates(d1,d2) {
+    if(d1.getFullYear() === d2.getFullYear() && d1.getMonth()===d2.getMonth() && d1.getDate()===d2.getDate()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 router.post(
 	'/login',
