@@ -38,8 +38,10 @@
                 <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
                     <div class="container-fluid">
                         
-                        <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action="/user/addURL" method="POST">
-                            <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Shrink Link" name="fullURL" id="fullURL">
+                        <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-200 navbar-search" action="/user/addURL" method="POST">
+                            <div class="input-group">
+                                <input type="text" placeholder="Enter Title" name="linkTitle" id="linkTitle" class="bg-light form-control mr-3 border-0 small">
+                                <input class="bg-light form-control border-0 small" type="text" placeholder="Shrink Link" name="fullURL" id="fullURL">
                                 <div class="input-group-append"><button class="btn btn-primary py-0" type="submit"><i class="icon ion-arrow-shrink" style="width: 16px;height: 26px;"></i></button></div>
                             </div>
                         </form>
@@ -75,9 +77,9 @@
                                 <table class="table dataTable my-0" id="dataTable">
                                     <thead>
                                         <tr>
+                                            <th>Title</th>
                                             <th style="width: 415px;">Full URL</th>
                                             <th style="width: 267px;">Short URL</th>
-                                            <th style="width: 443px;">Custom Back Part</th>
                                             <th>Visits</th>
                                         </tr>
                                     </thead>
@@ -86,18 +88,15 @@
                                             <% userURLs.map((userURL)=>{ %>
                                                 <tr>
                                                     <td>
+                                                        Untitled
+                                                    </td>
+                                                    <td>
                                                         <a href="<%= userURL.fullURL %>"><%= userURL.fullURL.slice(0,60) %></a>
                                                     </td>
                                                     <td>
                                                         <a href="dashboard/<%= userURL._id%>">/<%= userURL.shortURL %></a>
                                                     </td>
                                                     <td>
-                                                        <form action="/user/setCustomURL" method="POST">
-                                                            <input type="text" name="urlID" id="urlID" hidden value='<%= userURL._id %>'>
-                                                            <input type="text" style="width: 252px;margin-right: 14px;" name="customShortURL" id="customShortURL"  required value="<%=userURL.customShortURL%>" placeholder="No Custom Assigned">
-                                                            <button class="btn btn-primary" type="submit">Update</button></td>
-                                                        </form>
-                                                        <td>
                                                         <%= userURL.visits %> 
                                                     </td>
                                                 </tr>

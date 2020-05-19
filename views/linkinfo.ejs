@@ -20,6 +20,9 @@
             text-decoration: underline;
             color: #007FBB;
         }
+        .linkTitle{
+            color:black !important;
+        }
     </style>
 </head>
 
@@ -90,9 +93,39 @@
                     <% } %>
                     <div class="card shadow">
                         <div class="card-header py-3">
-                            <p class="text-primary m-0 font-weight-bold">Link Details</p>
+                            <p class="text-primary m-0 font-weight-bold">
+                                <a href="/user/dashboard" class="back"><i class="icon ion-android-arrow-back"></i> Go Back</a>
+                                </p>
                         </div>
                         <div class="card-body">
+                            <div class="top-portion">
+                                <div class="linkCreation">
+                                    <div class="timestamp">
+                                        Created May 13th, 4:45PM | <strong>raxraj</strong>
+                                    </div>
+                                </div>
+                                <h5 class="linkTitle">
+                                    Link title here
+                                </h5>
+                                <p>
+                                    <a href="https://linktofullURL" class="text-secondary text-decoration-none">https://linktofullURL</a>
+                                </p>
+                                <br>
+                                <div class="shortlink">
+                                    <a href="http://localhost:5500/shortlink" class="text-danger">http://localhost:5500/shortlink</a>
+                                    <button class="btn btn-outline-primary pt-0 pb-0 btn-sm">
+                                        Copy
+                                    </button>
+                                    <button class="btn btn-outline-danger pt-0 pb-0 btn-sm">
+                                        Edit
+                                    </button>
+                                    <br>
+                                    <p href="#" class="badge badge-danger">
+                                        Clicks : <i class="icon ion-arrow-graph-up-right"></i> 246
+                                    </p>  
+                                </div>
+                                <br>
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <canvas id="myChart" width="400" height="100"></canvas>
