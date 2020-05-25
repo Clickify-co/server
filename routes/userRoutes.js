@@ -5,6 +5,7 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const dateformat = require('dateformat')
 const authCheckers = require('../authCheckers')
+const { check, validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -13,7 +14,36 @@ const date_format = 'dd-mm-yyyy'
 const shorturlCollection = require('../models/shorturls');
 const userCollection = require('../models/users');
 
-router.post('/setCustomURL',authCheckers.checkAuthenticated,async(req,res)=>{
+
+router.get('/dashboard/delete/:urlID',authCheckers.checkAuthenticated,async(req,res)=>{
+	const shortURL = await shorturlCollection.findById(req.params.urlID)
+	if(!shortURL){
+		req.flash('error',"Link can't be deleted. No link exist with the provided ID.")
+		res.redirect('/user/dashboard')
+	}
+	else {
+		if(shortURL.ownerID === req.user._id)
+		{
+			shorturlCollection.deleteOne({_id:req.params.urlID},err=>{
+				if(err){
+					req.flash('error',err)
+					res.redirect('/user/dashboard')
+				}
+				else{
+					req.flash('success','URL deleted Succesfully')
+					res.redirect('/user/dashboard')
+				}
+				
+			})
+		}
+		else{
+			req.flash('error',"UhOh! You're not the owner of this Link.")
+			res.redirect('/user/dashboard')
+		}
+	}
+})
+
+router.post('/editURL',authCheckers.checkAuthenticated,async(req,res)=>{
 	const shortURL = await shorturlCollection.findById(req.body.urlID)
 	if(shortURL===null){
 		req.flash('error','We could not find the URL')
@@ -21,9 +51,10 @@ router.post('/setCustomURL',authCheckers.checkAuthenticated,async(req,res)=>{
 	}
 	else{
 		shortURL.customShortURL = req.body.customShortURL;
+		shortURL.linkTitle = req.body.linkTitle;
 		shortURL.save().then(()=>{
 			req.flash('success','Custom URL updated')
-			res.redirect('/user/dashboard')
+			res.redirect('/user/dashboard/'+req.body.urlID)
 		})
 	}
 })
@@ -32,6 +63,7 @@ router.post('/addURL',authCheckers.checkAuthenticated, async (req, res) => {
 	if(req.user){
 		urlData.ownerID = req.user._id
 	}
+	urlData.creationDate = new Date();
 	urlData.shortURL = shortid.generate();
 	const shortURL = null;
 	if(req.body.customShortURL)
@@ -48,36 +80,50 @@ router.post('/addURL',authCheckers.checkAuthenticated, async (req, res) => {
 		res.send({ done: false, message: 'customURL already Exists', status: 1901 });
 	}
 });
-router.post('/register',authCheckers.checkUnAuthenticated, async (req, res) => {
-	let userData = req.body;
-	userData.password = await bcrypt.hash(userData.password, 10);
-	const user = await userCollection.findOne({ $or: [{ username: userData.username }, { email: userData.email }] });
-	if (user === null) {
-		new userCollection(userData).save((err) => {
-			if (err) {
-				req.flash('error','Unknown error in creating account.')
-				res.redirect('/user/register')
-			}
+router.post('/register',authCheckers.checkUnAuthenticated, [check('email').isEmail(),check('password').isLength({min:6})],async (req, res) => {
+	const validationErrors = validationResult(req)
+	if (!validationErrors.isEmpty()) {
+		let validationErrorsArray = validationErrors.array();
+		if(validationErrorsArray[0].param === "email"){
+			req.flash('error','Invalid Email Address')
+		}
+		else{
+			req.flash('error','Password must contain atleast 6 characters.')
+		}
+		res.redirect('/user/register')
+	  }
+	else{
+		let userData = req.body;
+		userData.password = await bcrypt.hash(userData.password, 10);
+		userData.email = (userData.email).toLowerCase();
+		const user = await userCollection.findOne({ $or: [{ username: userData.username }, { email: userData.email }] });
+		if (user === null) {
+			new userCollection(userData).save((err) => {
+				if (err) {
+					req.flash('error','Unknown error in creating account.')
+					res.redirect('/user/register')
+				}
+				else {
+					console.log(chalk.green('Data inserted'));
+					req.flash('success','Account created Succesfully.')
+					res.redirect('/user/register')
+				}
+			});
+		} else {
+			if (user.email === userData.email)
+				{
+					req.flash('error','Email already used.')
+					res.redirect('/user/register')
+				}
+			else if (user.username === userData.username)
+				{
+					req.flash('error','Username already taken.')
+					res.redirect('/user/register')
+				}
 			else {
-				console.log(chalk.green('Data inserted'));
-				req.flash('success','Account created Succesfully.')
-				res.redirect('/user/register')
+				req.flash('error','Unknown error in creating account.')
+					res.redirect('/user/register')
 			}
-		});
-	} else {
-		if (user.email === userData.email)
-			{
-				req.flash('error','Email already used.')
-				res.redirect('/user/register')
-			}
-		else if (user.username === userData.username)
-			{
-				req.flash('error','Username already taken.')
-				res.redirect('/user/register')
-			}
-		else {
-			req.flash('error','Unknown error in creating account.')
-				res.redirect('/user/register')
 		}
 	}
 });
@@ -93,30 +139,56 @@ router.get('/dashboard',authCheckers.checkAuthenticated, async (req, res) => {
 });
 
 router.get('/dashboard/:linkid',authCheckers.checkAuthenticated,async(req,res)=>{
-	let userURLs;
+	let userURLs;	
 	if(req.user){
 		userURLs = await (shorturlCollection.findOne({ownerID:req.user._id,_id:req.params.linkid}))
-		let last_date = new Date()
-		let label = []
-		let data = []
-		for(let i=0;i<14;i++){
-			let flag = false;
-			label.push(dateformat(addDays(i,last_date),date_format))
-			let nov = 0;
-			for (const {dateOfVisit,numberOfVisits} of userURLs.dated){
-				if(compareDates(dateOfVisit,addDays(i,last_date))){
-					nov = numberOfVisits
+		if(userURLs){
+			let last_date = new Date()
+			let label = []
+			let data = []
+			for(let i=0;i<14;i++){
+				let flag = false;
+				if(userURLs.creationDate){
+					//Do Nothing
+				}
+				else{
+					userURLs.creationDate = addDays(14,last_date)
+				}
+				if(compareDates(userURLs.creationDate,addDays(i,last_date))){
+					label.push(dateformat(addDays(i,last_date),date_format))
+					let nov = 0;
+					for (const {dateOfVisit,numberOfVisits} of userURLs.dated){
+						if(compareDates(dateOfVisit,addDays(i,last_date))){
+							nov = numberOfVisits
+							break;
+						}
+						else{
+							continue
+						}
+					}
+					data.push(nov)
 					break;
 				}
 				else{
-					continue
+					label.push(dateformat(addDays(i,last_date),date_format))
+					let nov = 0;
+					for (const {dateOfVisit,numberOfVisits} of userURLs.dated){
+						if(compareDates(dateOfVisit,addDays(i,last_date))){
+							nov = numberOfVisits
+							break;
+						}
+						else{
+							continue
+						}
+					}
+					data.push(nov)
 				}
 			}
-			data.push(nov)
+			label = label.reverse();
+			data = data.reverse();
+			let creationDate = dateformat(userURLs.creationDate , 'mmm dd, hh:MM TT')
+			res.render('linkinfo.ejs',{userURLs,label,data,creationDate,ownerName: req.user.username})
 		}
-		label = label.reverse();
-		data = data.reverse();
-		res.render('linkinfo.ejs',{userURLs,label,data})
 		
 	}
 })

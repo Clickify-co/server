@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const chalk = require('chalk')
+const shortid = require('shortid')
 
 const router = express.Router();
 
@@ -20,6 +21,17 @@ router.get('/:shortURL',async (req,res)=>{
     else{
         redirectShort(shortURL,res)
     }
+})
+
+router.post('/createShort',(req,res)=>{
+    let urlData = req.body;
+    urlData.shortURL = shortid.generate();
+    new shortURLCollection(urlData).save((err,response)=>{
+        req.flash('shortURL',response.shortURL)
+        req.flash('fullURL',response.fullURL)
+        res.redirect('/')
+    })
+	
 })
 
 function redirectShort(shortURL,res) {

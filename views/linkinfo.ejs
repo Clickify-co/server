@@ -101,27 +101,40 @@
                             <div class="top-portion">
                                 <div class="linkCreation">
                                     <div class="timestamp">
-                                        Created May 13th, 4:45PM | <strong>raxraj</strong>
+                                        Created 
+                                        <%=creationDate %> 
+                                        | <strong>
+                                            <%= ownerName %> 
+                                        </strong>
                                     </div>
                                 </div>
                                 <h5 class="linkTitle">
-                                    Link title here
+                                    <% if(userURLs.linkTitle){ %> 
+                                        <%=userURLs.linkTitle%>
+                                        <%}
+                                         else { %> 
+                                            Untitled
+                                        <% } %> 
                                 </h5>
                                 <p>
-                                    <a href="https://linktofullURL" class="text-secondary text-decoration-none">https://linktofullURL</a>
+                                    <a href="<%= userURLs.fullURL %>" class="text-secondary text-decoration-none">
+                                    <%= userURLs.fullURL.slice(0,40) %>...
+                                    </a>
                                 </p>
                                 <br>
                                 <div class="shortlink">
-                                    <a href="http://localhost:5500/shortlink" class="text-danger">http://localhost:5500/shortlink</a>
-                                    <button class="btn btn-outline-primary pt-0 pb-0 btn-sm">
+                                    <a href="http://localhost:5500/<%=userURLs.shortURL%>"id="shortURL" class="text-danger mr-2">http://localhost:5500/<%if(userURLs.customShortURL){%><%=userURLs.customShortURL %><% }else{%><%=userURLs.shortURL %><% } %>
+                                    </a>
+                                    <button id="copybtn" data-clipboard-target="#shortURL" class="btn btn-outline-primary pt-0 pb-0 btn-sm">
                                         Copy
                                     </button>
-                                    <button class="btn btn-outline-danger pt-0 pb-0 btn-sm">
+                                    <button  class="btn btn-outline-danger pt-0 pb-0 btn-sm" data-toggle="modal" data-target="#editLink">
                                         Edit
                                     </button>
                                     <br>
-                                    <p href="#" class="badge badge-danger">
-                                        Clicks : <i class="icon ion-arrow-graph-up-right"></i> 246
+                                    <p href="#" class="badge badge-success">
+                                        <i class="icon ion-arrow-graph-up-right"></i> Clicks : 
+                                        <%= userURLs.visits %>
                                     </p>  
                                 </div>
                                 <br>
@@ -136,6 +149,49 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="editLink" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="editLinkTitle">
+                        <a href="http://localhost:5500/<%=userURLs.shortURL%>"id="shortURL2" class="text-danger mr-2">http://localhost:5500/<%if(userURLs.customShortURL){%><%=userURLs.customShortURL %><% }else{%><%=userURLs.shortURL %><% } %>
+                        </a>
+                        <button id="copybtn2" data-clipboard-target="#shortURL2" class="btn btn-outline-primary pt-0 pb-0 btn-sm">
+                            Copy
+                        </button> 
+                    </p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/user/editURL" method="POST">
+                        <input type="text" name="urlID" value="<%=userURLs._id%>" hidden>
+                        <div class="form-group">
+                            <label for="linkTitle">Title</label>
+                            <input type="text" class="form-control" name="linkTitle" value="<%=userURLs.linkTitle%>">
+                        </div>
+                        <label for="customShortURL">Customised Back Half</label>
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="text" class="form-control" readonly value="https://localhost:5500/">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="customShortURL" value="<%=userURLs.customShortURL%>">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <input type="submit" value="Save Changes" class="btn btn-success">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
         <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -143,6 +199,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.min.js"
         integrity="sha256-TQq84xX6vkwR0Qs1qH5ADkP+MvH0W+9E7TdHJsoIQiM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+    <script>
+        var clipboard = new ClipboardJS('#copybtn');  
+        clipboard.on('success', function(e) {
+            alert('Short URL Copied')
+
+        e.clearSelection();
+        }); 
+
+    clipboard.on('error', function(e) {
+        console.error('Action:', e.action);
+        console.error('Trigger:', e.trigger);
+        });  
+    var clipboard2 = new ClipboardJS('#copybtn2');  
+        clipboard2.on('success', function(e) {
+            alert('Short URL Copied')
+
+        e.clearSelection();
+        }); 
+
+    clipboard2.on('error', function(e) {
+        console.error('Action:', e.action);
+        console.error('Trigger:', e.trigger);
+        });
+    </script>
     <script>
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {

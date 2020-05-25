@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const shorturlSchema = new Schema({
+	linkTitle: {
+		type: String,
+		required: false,
+		default: 'Untitled'
+	},
 	fullURL: {
 		type: String,
 		required: true
@@ -19,19 +24,24 @@ const shorturlSchema = new Schema({
 		required: true,
 		default: 0
 	},
-	dated: 
-	[
-		{
-			dateOfVisit: {
-				type: Date,
-				required: true,
-			},
-			numberOfVisits: {
-				type: Number,
-				required: false
+	dated:
+		[
+			{
+				dateOfVisit: {
+					type: Date,
+					required: true,
+				},
+				numberOfVisits: {
+					type: Number,
+					required: false
+				}
 			}
-		}
-	],
+		],
+	creationDate: {
+		type: Date,
+		required: false,
+		default: new Date()
+	},
 	ownerID: {
 		type: String,
 		required: true,

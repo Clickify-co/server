@@ -55,13 +55,13 @@ body{
 
 .hoverCard{
     min-height: 40vh;
-    transition: 0.3s ease-out;
+    transition: 0.2s ease-out;
 }
 .hoverCardTitle{
-    font-size: 24px;
+    font-size: 20px;
 }
 .hoverCardIcon>i{
-    font-size: 50px;
+    font-size: 20px;
 }
 .hoverCardBody{
     color: dimgrey;
