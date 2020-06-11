@@ -18,7 +18,7 @@ require('dotenv').config(); //Environment Configs
 //Configure Limiter
 const limiter = rateLimit({
 	windowMs: 2 * 60 * 1000, // 15 minutes
-	max: 75 // limit each IP to 100 requests per windowMs
+	max: 100 // limit each IP to 100 requests per windowMs
   });
 
 // CONFIGURE SENTRY
@@ -29,7 +29,7 @@ const intializePassport = require('./passportConfig'); //PASSPORT CONFIG
 const userCollection = require('./models/users');
 
 // mongoDBConnection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex:true }, (err) => {
 	if (err) console.log(chalk.red('MongoDb Connection Error'));
 	else console.log(chalk.blue('Connected to MongoDB'));
 });
