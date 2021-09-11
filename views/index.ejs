@@ -71,11 +71,11 @@
       <input type="url" name="fullURL" placeholder="Shrink your URL now" class="form-control form-control-lg mr-2 col" required id="fullURL">
       <button type="submit" class="btn btn-lg btn-danger">Shrink</button>
     </form>
-      <% if(messages.shortURL) {%> 
+      <% if(messages.shortURL) {%>
         <div class="container bg-white p-3" id="generatedLink">
           <div class="row">
             <div class="col-md-8 d-flex align-items-center justify-content-start">
-              <%= messages.fullURL %> 
+              <%= messages.fullURL %>
             </div>
             <div class="col-md-4 d-flex align-items-center justify-content-end">
               <a href="http://localhost:5500/<%= messages.shortURL %>" id="shortURL">http://localhost:5500/<%=messages.shortURL  %> </a>
@@ -83,8 +83,8 @@
             </div>
           </div>
         </div>
-      <% } %> 
-    
+      <% } %>
+
   </div>
   <div id="About" class="section-1 text-center p-5 container">
     <h1 class="font-weight-bold">
@@ -144,22 +144,22 @@
     <h5>
       Made with <i class=" text-danger fa fa-heart"></i> by raxraj & xxajayy
     </h5>
-    
+
   </footer>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
 <script>
-  var clipboard = new ClipboardJS('#copybtn');  
+  var clipboard = new ClipboardJS('#copybtn');
         clipboard.on('success', function(e) {
             alert('Short URL Copied')
 
         e.clearSelection();
-        }); 
+        });
 
     clipboard.on('error', function(e) {
         console.error('Action:', e.action);
         console.error('Trigger:', e.trigger);
-        });  
+        });
 </script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
   integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

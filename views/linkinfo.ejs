@@ -101,20 +101,20 @@
                             <div class="top-portion">
                                 <div class="linkCreation">
                                     <div class="timestamp">
-                                        Created 
-                                        <%=creationDate %> 
+                                        Created
+                                        <%=creationDate %>
                                         | <strong>
-                                            <%= ownerName %> 
+                                            <%= ownerName %>
                                         </strong>
                                     </div>
                                 </div>
                                 <h5 class="linkTitle">
-                                    <% if(userURLs.linkTitle){ %> 
+                                    <% if(userURLs.linkTitle){ %>
                                         <%=userURLs.linkTitle%>
                                         <%}
-                                         else { %> 
+                                         else { %>
                                             Untitled
-                                        <% } %> 
+                                        <% } %>
                                 </h5>
                                 <p>
                                     <a href="<%= userURLs.fullURL %>" class="text-secondary text-decoration-none">
@@ -133,9 +133,9 @@
                                     </button>
                                     <br>
                                     <p href="#" class="badge badge-success">
-                                        <i class="icon ion-arrow-graph-up-right"></i> Clicks : 
+                                        <i class="icon ion-arrow-graph-up-right"></i> Clicks :
                                         <%= userURLs.visits %>
-                                    </p>  
+                                    </p>
                                 </div>
                                 <br>
                             </div>
@@ -158,7 +158,7 @@
                         </a>
                         <button id="copybtn2" data-clipboard-target="#shortURL2" class="btn btn-outline-primary pt-0 pb-0 btn-sm">
                             Copy
-                        </button> 
+                        </button>
                     </p>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -201,23 +201,23 @@
         integrity="sha256-TQq84xX6vkwR0Qs1qH5ADkP+MvH0W+9E7TdHJsoIQiM=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
     <script>
-        var clipboard = new ClipboardJS('#copybtn');  
+        var clipboard = new ClipboardJS('#copybtn');
         clipboard.on('success', function(e) {
             alert('Short URL Copied')
 
         e.clearSelection();
-        }); 
+        });
 
     clipboard.on('error', function(e) {
         console.error('Action:', e.action);
         console.error('Trigger:', e.trigger);
-        });  
-    var clipboard2 = new ClipboardJS('#copybtn2');  
+        });
+    var clipboard2 = new ClipboardJS('#copybtn2');
         clipboard2.on('success', function(e) {
             alert('Short URL Copied')
 
         e.clearSelection();
-        }); 
+        });
 
     clipboard2.on('error', function(e) {
         console.error('Action:', e.action);
@@ -233,7 +233,7 @@
                 datasets: [{
                     label: '# of clicks',
                     data: <%- JSON.stringify(data); %> ,
-                    backgroundColor: 
+                    backgroundColor:
                         '#4DCDFC',
                     borderWidth: 1
                 }]
