@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Brand</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <style>
+        .shortURL {
+            color: black;
+            cursor: pointer;
+        }
+
+        .shortURL:hover {
+            text-decoration: underline;
+            color: #007FBB;
+        }
+        .linkTitle{
+            color:black !important;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a
+                    class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#"
+                    style="width: 100%;background-color: #ffffff;"><img src="/images/logos/clickify.png"
+                        style="width: 94px;">
+                    <div class="sidebar-brand-icon rotate-n-15"></div>
+                    <div class="sidebar-brand-text mx-3"></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="nav navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item" role="presentation"></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="dashboard.html"><i
+                                class="fas fa-link"></i>&nbsp;<strong>Dashboard</strong></a><a class="nav-link"
+                            href="profile.html"><i class="fas fa-user"></i><span>Profile</span>
+                            <div class="text-center d-none d-md-inline"></div>
+                        </a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content" style="margin-right: 5px;">
+                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+                    <div class="container-fluid">
+
+                        <form
+                            class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+                            action="/user/addURL" method="POST">
+                            <div class="input-group"><input class="bg-light form-control border-0 small" type="text"
+                                    placeholder="Shrink Link" name="fullURL" id="fullURL">
+                                <div class="input-group-append"><button class="btn btn-primary py-0" type="submit"><i
+                                            class="icon ion-arrow-shrink"
+                                            style="width: 16px;height: 26px;"></i></button></div>
+                            </div>
+                        </form>
+                        <ul class="nav navbar-nav flex-nowrap ml-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link"
+                                    data-toggle="dropdown" aria-expanded="false" href="#"><i
+                                        class="icon ion-arrow-shrink"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right p-3 animated--grow-in" role="menu"
+                                    aria-labelledby="searchDropdown">
+                                    <form class="form-inline mr-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small"
+                                                type="text" placeholder="Shrink new Link">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0"
+                                                    type="button"><i class="icon ion-arrow-shrink"
+                                                        style="width: 16px;height: 26px;"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow mx-1" role="presentation">
+                                <a href="/user/logout" class="btn btn-primary">Logout <i
+                                        class="fa fa-sign-out-alt"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <% if(messages.success){ %>
+                    <div class="alert alert-success">
+                        <%= messages.success%>
+                    </div>
+                    <% } %>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 font-weight-bold">
+                                <a href="/user/dashboard" class="back"><i class="icon ion-android-arrow-back"></i> Go Back</a>
+                                </p>
+                        </div>
+                        <div class="card-body">
+                            <div class="top-portion">
+                                <div class="linkCreation">
+                                    <div class="timestamp">
+                                        Created 
+                                        <%=creationDate %> 
+                                        | <strong>
+                                            <%= ownerName %> 
+                                        </strong>
+                                    </div>
+                                </div>
+                                <h5 class="linkTitle">
+                                    <% if(userURLs.linkTitle){ %> 
+                                        <%=userURLs.linkTitle%>
+                                        <%}
+                                         else { %> 
+                                            Untitled
+                                        <% } %> 
+                                </h5>
+                                <p>
+                                    <a href="<%= userURLs.fullURL %>" class="text-secondary text-decoration-none">
+                                    <%= userURLs.fullURL.slice(0,40) %>...
+                                    </a>
+                                </p>
+                                <br>
+                                <div class="shortlink">
+                                    <a href="http://clickifyco.herokuapp.com/<%=userURLs.shortURL%>"id="shortURL" class="text-danger mr-2">http://clickifyco.herokuapp.com/<%if(userURLs.customShortURL){%><%=userURLs.customShortURL %><% }else{%><%=userURLs.shortURL %><% } %>
+                                    </a>
+                                    <button id="copybtn" data-clipboard-target="#shortURL" class="btn btn-outline-primary pt-0 pb-0 btn-sm">
+                                        Copy
+                                    </button>
+                                    <button  class="btn btn-outline-danger pt-0 pb-0 btn-sm" data-toggle="modal" data-target="#editLink">
+                                        Edit
+                                    </button>
+                                    <br>
+                                    <p href="#" class="badge badge-success">
+                                        <i class="icon ion-arrow-graph-up-right"></i> Clicks : 
+                                        <%= userURLs.visits %>
+                                    </p>  
+                                </div>
+                                <br>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <canvas id="myChart" width="400" height="100"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editLink" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="editLinkTitle">
+                        <a href="http://clickifyco.herokuapp.com/<%=userURLs.shortURL%>"id="shortURL2" class="text-danger mr-2">http://clickifyco.herokuapp.com/<%if(userURLs.customShortURL){%><%=userURLs.customShortURL %><% }else{%><%=userURLs.shortURL %><% } %>
+                        </a>
+                        <button id="copybtn2" data-clipboard-target="#shortURL2" class="btn btn-outline-primary pt-0 pb-0 btn-sm">
+                            Copy
+                        </button> 
+                    </p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/user/editURL" method="POST">
+                        <input type="text" name="urlID" value="<%=userURLs._id%>" hidden>
+                        <div class="form-group">
+                            <label for="linkTitle">Title</label>
+                            <input type="text" class="form-control" name="linkTitle" value="<%=userURLs.linkTitle%>">
+                        </div>
+                        <label for="customShortURL">Customised Back Half</label>
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="text" class="form-control" readonly value="http://clickifyco.herokuapp.com/">
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" name="customShortURL" value="<%=userURLs.customShortURL%>">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <input type="submit" value="Save Changes" class="btn btn-success">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.min.js"
+        integrity="sha256-TQq84xX6vkwR0Qs1qH5ADkP+MvH0W+9E7TdHJsoIQiM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+    <script>
+        var clipboard = new ClipboardJS('#copybtn');  
+        clipboard.on('success', function(e) {
+            alert('Short URL Copied')
+
+        e.clearSelection();
+        }); 
+
+    clipboard.on('error', function(e) {
+        console.error('Action:', e.action);
+        console.error('Trigger:', e.trigger);
+        });  
+    var clipboard2 = new ClipboardJS('#copybtn2');  
+        clipboard2.on('success', function(e) {
+            alert('Short URL Copied')
+
+        e.clearSelection();
+        }); 
+
+    clipboard2.on('error', function(e) {
+        console.error('Action:', e.action);
+        console.error('Trigger:', e.trigger);
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: <%- JSON.stringify(label); %> ,
+                datasets: [{
+                    label: '# of clicks',
+                    data: <%- JSON.stringify(data); %> ,
+                    backgroundColor: 
+                        '#4DCDFC',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            precision:0,
+                            suggestedMin:0,
+                            suggestedMax:<%- Math.max(...data)==0? 10 :  Math.max(...data)+(Math.max(...data)/10) %>
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+</body>
+
+
+</html>

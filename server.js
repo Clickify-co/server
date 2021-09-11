@@ -6,10 +6,20 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
+const helmet = require('helmet')
+const rateLimit = require("express-rate-limit");
 const authCheckers = require('./authCheckers')
+
+
 let app = express();
 
 require('dotenv').config(); //Environment Configs
+
+//Configure Limiter
+const limiter = rateLimit({
+	windowMs: 2 * 60 * 1000, // 15 minutes
+	max: 100 // limit each IP to 100 requests per windowMs
+  });
 
 // CONFIGURE SENTRY
 sentry.init({ dsn: 'https://1c683ce30a9a49699f2061a314493f1d@o386985.ingest.sentry.io/5221824' });
@@ -19,7 +29,7 @@ const intializePassport = require('./passportConfig'); //PASSPORT CONFIG
 const userCollection = require('./models/users');
 
 // mongoDBConnection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex:true }, (err) => {
 	if (err) console.log(chalk.red('MongoDb Connection Error'));
 	else console.log(chalk.blue('Connected to MongoDB'));
 });
@@ -28,17 +38,21 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 // Call Passport Initialize Function
 intializePassport(
 	passport,
-	async (email) => await userCollection.findOne({ email: email }),
+	async (email) => await userCollection.findOne({$or:[{email:email.toLowerCase()},{username:email}]}),
 	async (id) => await userCollection.findOne({ username: id })
 );
 // Call Passport Intialize Function
 
 // SERVER SETTINGS
+app.use(helmet())
+app.use(limiter)
+app.use(express.json({limit:'10kb'}))
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(
 	session({
-		secret: 'RANDOMSECRET',
+		secret: process.env.SECRET,
+		name:process.env.NAME,
 		resave: false,
 		saveUninitialized: false
 	})
@@ -72,7 +86,7 @@ app.get('/user/login',authCheckers.checkUnAuthenticated,(req,res)=>{
 app.use('/user/register',authCheckers.checkUnAuthenticated,(req,res)=>{
 	res.render('signup.ejs')
 })
-app.use(function(req, res, send) {
+app.use(function(req, res) {
 	res.status(404).render('404.ejs');
 }	);
 // ROUTES
