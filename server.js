@@ -18,7 +18,8 @@ require('dotenv').config(); //Environment Configs
 //Configure Limiter
 const limiter = rateLimit({
 	windowMs: 2 * 60 * 1000, // 15 minutes
-	max: 5 // limit each IP to 100 requests per windowMs
+	max: 5, // limit each IP to 100 requests per windowMs,
+	handler: (req,res)=>{res.render('429.ejs')}
   });
 
 // CONFIGURE SENTRY
