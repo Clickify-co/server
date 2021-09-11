@@ -27,7 +27,7 @@ router.get('/dashboard/delete/:urlID', authCheckers.checkAuthenticated, async (r
 		req.flash('error', "Link can't be deleted. No link exist with the provided ID.");
 		res.redirect('/user/dashboard');
 	} else {
-		if (shortURL.ownerID === req.user._id) {
+		if (shortURL.ownerID == req.user._id) {
 			shorturlCollection.deleteOne({ _id: req.params.urlID }, (err) => {
 				if (err) {
 					req.flash('error', err);
